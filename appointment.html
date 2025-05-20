@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medical Appointment Booking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --hospital-blue: #0066cc;
+      --hospital-dark-blue: #004080;
+      --hospital-light-blue: #e6f2ff;
+      --hospital-green: #4caf50;
+      --hospital-white: #f8f9fa;
+      --hospital-gray: #e0e0e0;
+      --hospital-dark: #333333;
+      --hospital-red: #e53935;
+    }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--hospital-light-blue);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: var(--hospital-dark);
+      background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M30,10 L70,10 L90,30 L90,70 L70,90 L30,90 L10,70 L10,30 Z" fill="none" stroke="%230066cc" stroke-width="0.5" stroke-opacity="0.2"/></svg>');
+      background-size: 100px;
+    }
+    
+    .container {
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 102, 204, 0.2);
+      padding: 40px;
+      width: 100%;
+      max-width: 550px;
+      position: relative;
+      overflow: hidden;
+      border-top: 5px solid var(--hospital-blue);
+    }
+    
+    .container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100px;
+      height: 100px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%230066cc" opacity="0.1"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm-1.06 13.54L7.4 12l1.41-1.41 2.12 2.12 4.24-4.24 1.41 1.41-5.64 5.66z"/></svg>');
+      background-size: contain;
+      background-repeat: no-repeat;
+      z-index: 0;
+    }
+    
+    h2 {
+      color: var(--hospital-blue);
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 28px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    h2::after {
+      content: "";
+      display: block;
+      width: 80px;
+      height: 3px;
+      background-color: var(--hospital-green);
+      margin: 10px auto 0;
+    }
+    
+    .form-group {
+      margin-bottom: 25px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 500;
+      color: var(--hospital-dark-blue);
+      font-size: 15px;
+    }
+    
+    label::before {
+      content: "+ ";
+      color: var(--hospital-blue);
+      font-weight: bold;
+    }
+    
+    input, textarea, select {
+      width: 100%;
+      padding: 14px 15px;
+      border: 1px solid var(--hospital-gray);
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s;
+      box-sizing: border-box;
+      background-color: var(--hospital-white);
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--hospital-blue);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+      background-color: white;
+    }
+    
+    .input-icon {
+      position: relative;
+    }
+    
+    .input-icon i {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--hospital-blue);
+      font-size: 18px;
+    }
+    
+    button {
+      background-color: var(--hospital-blue);
+      color: white;
+      border: none;
+      padding: 15px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 17px;
+      font-weight: 500;
+      width: 100%;
+      transition: all 0.3s;
+      margin-top: 15px;
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    button:hover {
+      background-color: var(--hospital-dark-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 102, 204, 0.3);
+    }
+    
+    button::after {
+      content: "→";
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0;
+      transition: all 0.3s;
+    }
+    
+    button:hover::after {
+      opacity: 1;
+      right: 15px;
+    }
+    
+    .dashboard-link {
+      display: block;
+      text-align: center;
+      margin-top: 25px;
+      color: var(--hospital-blue);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s;
+      font-size: 15px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .dashboard-link:hover {
+      color: var(--hospital-dark-blue);
+      text-decoration: underline;
+    }
+    
+    .dashboard-link i {
+      margin-right: 8px;
+    }
+    
+    .medical-icon {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .medical-icon svg {
+      width: 60px;
+      height: 60px;
+      fill: var(--hospital-blue);
+      opacity: 0.8;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px;
+        margin: 20px;
+      }
+      
+      h2 {
+        font-size: 24px;
+      }
+    }
+    
+    /* Animation */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+    
+    .container {
+      animation: pulse 5s infinite ease-in-out;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <div class="medical-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z"/>
+      </svg>
+    </div>
+    
+    <h2>Medical Appointment Booking</h2>
+    <form id="appointmentForm">
+      <div class="form-group input-icon">
+        <label for="name">Patient Full Name</label>
+        <input type="text" id="name" placeholder="Enter patient's full name" required />
+        <i class="fas fa-user"></i>
+      </div>
+      
+      <div class="form-group input-icon">
+        <label for="doctor">Select Doctor</label>
+        <select id="doctor" required>
+          <option value="">-- Select a doctor --</option>
+          <option value="Dr. Sarah Johnson">Dr. Sarah Johnson (Cardiology)</option>
+          <option value="Dr. Michael Chen">Dr. Michael Chen (Neurology)</option>
+          <option value="Dr. Emily Wilson">Dr. Emily Wilson (Pediatrics)</option>
+          <option value="Dr. Robert Davis">Dr. Robert Davis (Orthopedics)</option>
+        </select>
+        <i class="fas fa-user-md"></i>
+      </div>
+      
+      <div class="form-group input-icon">
+        <label for="dateTime">Appointment Date & Time</label>
+        <input type="datetime-local" id="dateTime" required />
+        <i class="fas fa-calendar-alt"></i>
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Medical Concern</label>
+        <textarea id="description" placeholder="Briefly describe your symptoms or reason for visit" rows="4"></textarea>
+      </div>
+      
+      <button type="submit">
+        <i class="fas fa-calendar-check"></i> Confirm Appointment
+      </button>
+    </form>
+
+    <a href="dashboard.html" class="dashboard-link">
+      <i class="fas fa-tachometer-alt"></i> Return to Patient Dashboard
+    </a>
+  </div>
+
+  <script>
+    document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const appointment = {
+        name: document.getElementById('name').value,
+        doctor: document.getElementById('doctor').value,
+        dateTime: document.getElementById('dateTime').value,
+        description: document.getElementById('description').value,
+        status: "Scheduled",
+        appointmentId: "APT-" + Math.floor(Math.random() * 1000000)
+      };
+
+      let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+      appointments.push(appointment);
+      localStorage.setItem('appointments', JSON.stringify(appointments));
+
+      // Show confirmation with more medical style
+      const confirmation = document.createElement('div');
+      confirmation.innerHTML = `
+        <div style="
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0,102,204,0.9);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          color: white;
+          z-index: 1000;
+          font-family: 'Montserrat', sans-serif;
+          text-align: center;
+          padding: 20px;
+        ">
+          <div style="font-size: 80px; margin-bottom: 20px;">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h2 style="font-size: 28px; margin-bottom: 15px;">Appointment Confirmed!</h2>
+          <p style="font-size: 18px; margin-bottom: 30px; max-width: 500px;">
+            Your appointment with ${appointment.doctor} has been scheduled successfully.
+            Your appointment ID is <strong>${appointment.appointmentId}</strong>.
+          </p>
+          <button onclick="this.parentNode.remove()" style="
+            background: white;
+            color: var(--hospital-blue);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+          ">
+            <i class="fas fa-thumbs-up"></i> Thank You
+          </button>
+        </div>
+      `;
+      
+      // Add Font Awesome for the icons
+      const fa = document.createElement('link');
+      fa.rel = 'stylesheet';
+      fa.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+      confirmation.querySelector('div').appendChild(fa);
+      
+      document.body.appendChild(confirmation);
+      this.reset();
+    });
+    
+    // Set minimum date/time to current moment
+    const now = new Date();
+    const minDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    document.getElementById('dateTime').min = minDate;
+  </script>
+</body>
+</html>
