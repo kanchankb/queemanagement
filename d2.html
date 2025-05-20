@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Appointment System</title>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2a7f62;
+            --secondary: #3d9970;
+            --accent: #5fb49c;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f7ff 100%);
+            min-height: 100vh;
+            padding: 15px;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+        
+        .header h1 {
+            color: var(--primary);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            color: var(--secondary);
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: minmax(200px, 300px) 1fr;
+            gap: 15px;
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            width: 100%;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .nav-menu {
+            list-style: none;
+        }
+        
+        .nav-item {
+            margin-bottom: 8px;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 8px;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: clamp(0.85rem, 1.5vw, 1rem);
+        }
+        
+        .nav-link i {
+            margin-right: 8px;
+            width: 18px;
+            text-align: center;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background: rgba(42, 127, 98, 0.1);
+            color: var(--primary);
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            width: 100%;
+            overflow-x: auto;
+        }
+        
+        .section-title {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-title i {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--primary);
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(95, 180, 156, 0.2);
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+        }
+        
+        .btn-success {
+            background: var(--success);
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        .btn-info {
+            background: var(--info);
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            min-width: 600px;
+        }
+        
+        .table th, .table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+            font-size: clamp(0.8rem, 2vw, 0.95rem);
+        }
+        
+        .table th {
+            background: rgba(42, 127, 98, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .table tr:hover {
+            background: rgba(42, 127, 98, 0.05);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #d39e00;
+        }
+        
+        .status-confirmed {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+        
+        .status-completed {
+            background: rgba(23, 162, 184, 0.2);
+            color: #17a2b8;
+        }
+        
+        .status-cancelled {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .modal-title {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--primary);
+        }
+        
+        .close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+        
+        .qr-container {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .token-display {
+            text-align: center;
+            font-size: clamp(2rem, 6vw, 3rem);
+            font-weight: 700;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+        }
+        
+        .nav-icon {
+            position: relative;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -300px;
+                width: 280px;
+                height: 100vh;
+                transition: left 0.3s ease;
+                z-index: 1000;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .main-content {
+                margin-top: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                padding: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header p {
+                font-size: 0.9rem;
+            }
+            
+            .modal-content {
+                padding: 15px;
+            }
+            
+            .form-control {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-hospital-alt"></i> Goverment Hospital</h1>
+            <p>Appointment Management System</p>
+        </div>
+        
+        <div class="dashboard">
+            <div class="sidebar" id="sidebar">
+                <button class="mobile-menu-btn" id="mobile-menu-btn">
+                    <i class="fas fa-bars"></i> Menu
+                </button>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" id="dashboard-tab">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" id="appointments-tab">
+                            <i class="fas fa-calendar-check"></i> Appointments
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" id="review-tab">
+                            <i class="fas fa-clipboard-check"></i> Review Requests
+                            <span class="nav-icon">
+                                <span class="notification-badge">3</span>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" id="tokens-tab">
+                            <i class="fas fa-ticket-alt"></i> Token Numbers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" id="notifications-tab">
+                            <i class="fas fa-bell"></i> Notifications
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" id="reports-tab">
+                            <i class="fas fa-chart-bar"></i> Reports
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="main-content">
+                <!-- Dashboard Content -->
+                <div id="dashboard-content">
+                    <h2 class="section-title"><i class="fas fa-tachometer-alt"></i> Staff Dashboard</h2>
+                    
+                    <div class="card">
+                        <h3>Quick Actions</h3>
+                        <div class="quick-actions">
+                            <button class="btn btn-success" id="new-appointment-btn">
+                                <i class="fas fa-plus"></i> New Appointment
+                            </button>
+                            <button class="btn btn-warning" id="modify-appointment-btn">
+                                <i class="fas fa-edit"></i> Modify
+                            </button>
+                            <button class="btn btn-info" id="generate-token-btn">
+                                <i class="fas fa-ticket-alt"></i> Token
+                            </button>
+                            <button class="btn btn-danger" id="send-notification-btn">
+                                <i class="fab fa-whatsapp"></i> Notify
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Today's Appointments</h3>
+                        <div style="overflow-x: auto;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Token No.</th>
+                                        <th>Patient Name</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>TK-1024</td>
+                                        <td>John Smith</td>
+                                        <td>10:00 AM</td>
+                                        <td><span class="status-badge status-confirmed">Confirmed</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success">Check In</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>TK-1025</td>
+                                        <td>Sarah Johnson</td>
+                                        <td>10:30 AM</td>
+                                        <td><span class="status-badge status-pending">Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-warning">Confirm</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>TK-1026</td>
+                                        <td>Michael Brown</td>
+                                        <td>11:15 AM</td>
+                                        <td><span class="status-badge status-confirmed">Confirmed</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success">Check In</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>TK-1027</td>
+                                        <td>Emily Davis</td>
+                                        <td>2:00 PM</td>
+                                        <td><span class="status-badge status-cancelled">Cancelled</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger">Remove</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Review Requests Content (Hidden by default) -->
+                <div id="review-content" style="display: none;">
+                    <h2 class="section-title"><i class="fas fa-clipboard-check"></i> Review Requests</h2>
+                    
+                    <div class="card">
+                        <div style="overflow-x: auto;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Request ID</th>
+                                        <th>Patient Name</th>
+                                        <th>Request Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>REQ-1001</td>
+                                        <td>John Smith</td>
+                                        <td>2023-05-15</td>
+                                        <td><span class="status-badge status-pending">Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success">Approve</button>
+                                            <button class="btn btn-sm btn-danger">Reject</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>REQ-1002</td>
+                                        <td>Sarah Johnson</td>
+                                        <td>2023-05-16</td>
+                                        <td><span class="status-badge status-pending">Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success">Approve</button>
+                                            <button class="btn btn-sm btn-danger">Reject</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>REQ-1003</td>
+                                        <td>Michael Brown</td>
+                                        <td>2023-05-17</td>
+                                        <td><span class="status-badge status-pending">Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success">Approve</button>
+                                            <button class="btn btn-sm btn-danger">Reject</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Appointments Content (Hidden by default) -->
+                <div id="appointments-content" style="display: none;">
+                    <h2 class="section-title"><i class="fas fa-calendar-check"></i> Manage Appointments</h2>
+                    
+                    <div class="card">
+                        <div class="form-group">
+                            <label for="search-patient">Search Patient</label>
+                            <input type="text" id="search-patient" class="form-control" placeholder="Enter patient name or ID">
+                        </div>
+                        
+                        <div style="overflow-x: auto;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Appt. ID</th>
+                                        <th>Patient Name</th>
+                                        <th>Date & Time</th>
+                                        <th>Doctor</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>APT-2023-1001</td>
+                                        <td>John Smith</td>
+                                        <td>2023-05-18 10:00 AM</td>
+                                        <td>Dr. Williams</td>
+                                        <td><span class="status-badge status-confirmed">Confirmed</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-warning">Modify</button>
+                                            <button class="btn btn-sm btn-danger">Cancel</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>APT-2023-1002</td>
+                                        <td>Sarah Johnson</td>
+                                        <td>2023-05-18 11:30 AM</td>
+                                        <td>Dr. Patel</td>
+                                        <td><span class="status-badge status-pending">Pending</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-warning">Modify</button>
+                                            <button class="btn btn-sm btn-danger">Cancel</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>APT-2023-1003</td>
+                                        <td>Michael Brown</td>
+                                        <td>2023-05-19 09:00 AM</td>
+                                        <td>Dr. Garcia</td>
+                                        <td><span class="status-badge status-confirmed">Confirmed</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-warning">Modify</button>
+                                            <button class="btn btn-sm btn-danger">Cancel</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tokens Content (Hidden by default) -->
+                <div id="tokens-content" style="display: none;">
+                    <h2 class="section-title"><i class="fas fa-ticket-alt"></i> Token Management</h2>
+                    
+                    <div class="card">
+                        <div class="form-group">
+                            <label for="token-patient">Select Patient</label>
+                            <select id="token-patient" class="form-control">
+                                <option value="">-- Select Patient --</option>
+                                <option value="1">John Smith (APT-2023-1001)</option>
+                                <option value="2">Sarah Johnson (APT-2023-1002)</option>
+                                <option value="3">Michael Brown (APT-2023-1003)</option>
+                            </select>
+                        </div>
+                        
+                        <button class="btn btn-primary btn-block" id="generate-token-now-btn">
+                            <i class="fas fa-ticket-alt"></i> Generate Token Number
+                        </button>
+                        
+                        <div id="token-display" style="display: none;">
+                            <div class="token-display">TK-1042</div>
+                            <div class="qr-container" id="token-qrcode"></div>
+                            <button class="btn btn-success btn-block" id="print-token-btn">
+                                <i class="fas fa-print"></i> Print Token
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Notifications Content (Hidden by default) -->
+                <div id="notifications-content" style="display: none;">
+                    <h2 class="section-title"><i class="fas fa-bell"></i> Send Notifications</h2>
+                    
+                    <div class="card">
+                        <div class="form-group">
+                            <label for="notification-patient">Select Patient</label>
+                            <select id="notification-patient" class="form-control">
+                                <option value="">-- Select Patient --</option>
+                                <option value="1">John Smith (APT-2023-1001)</option>
+                                <option value="2">Sarah Johnson (APT-2023-1002)</option>
+                                <option value="3">Michael Brown (APT-2023-1003)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notification-type">Notification Type</label>
+                            <select id="notification-type" class="form-control">
+                                <option value="reminder">Appointment Reminder</option>
+                                <option value="confirmation">Appointment Confirmation</option>
+                                <option value="reschedule">Reschedule Request</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notification-message">Message</label>
+                            <textarea id="notification-message" class="form-control" rows="5" placeholder="Enter your notification message..."></textarea>
+                        </div>
+                        
+                        <button class="btn btn-success btn-block" id="send-whatsapp-btn">
+                            <i class="fab fa-whatsapp"></i> Send WhatsApp Notification
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- New Appointment Modal -->
+    <div class="modal" id="new-appointment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-calendar-plus"></i> New Appointment</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="new-appointment-form">
+                <div class="form-group">
+                    <label for="patient-name">Patient Name</label>
+                    <input type="text" id="patient-name" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="patient-phone">Phone Number</label>
+                    <input type="tel" id="patient-phone" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appointment-date">Appointment Date</label>
+                    <input type="date" id="appointment-date" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appointment-time">Appointment Time</label>
+                    <input type="time" id="appointment-time" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appointment-doctor">Select Doctor</label>
+                    <select id="appointment-doctor" class="form-control" required>
+                        <option value="">-- Select Doctor --</option>
+                        <option value="1">Dr. Williams (Cardiology)</option>
+                        <option value="2">Dr. Patel (Neurology)</option>
+                        <option value="3">Dr. Garcia (Pediatrics)</option>
+                        <option value="4">Dr. Chen (Orthopedics)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appointment-reason">Reason for Visit</label>
+                    <textarea id="appointment-reason" class="form-control" rows="3"></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">Schedule Appointment</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modify Appointment Modal -->
+    <div class="modal" id="modify-appointment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-edit"></i> Modify Appointment</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="modify-appointment-form">
+                <div class="form-group">
+                    <label for="modify-appointment-id">Appointment ID</label>
+                    <input type="text" id="modify-appointment-id" class="form-control" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="modify-patient-name">Patient Name</label>
+                    <input type="text" id="modify-patient-name" class="form-control" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="modify-date">New Date</label>
+                    <input type="date" id="modify-date" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="modify-time">New Time</label>
+                    <input type="time" id="modify-time" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="modify-doctor">Change Doctor</label>
+                    <select id="modify-doctor" class="form-control">
+                        <option value="">-- Keep Current --</option>
+                        <option value="1">Dr. Williams (Cardiology)</option>
+                        <option value="2">Dr. Patel (Neurology)</option>
+                        <option value="3">Dr. Garcia (Pediatrics)</option>
+                        <option value="4">Dr. Chen (Orthopedics)</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">Update Appointment</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            
+            if (!sidebar.contains(event.target) && event.target !== menuBtn) {
+                sidebar.classList.remove('active');
+            }
+        });
+        
+        // Tab Navigation
+        document.getElementById('dashboard-tab').addEventListener('click', function(e) {
+            e.preventDefault();
+            showTab('dashboard-content');
+            document.getElementById('sidebar').classList.remove('active');
+        });
+        
+        document.getElementById('appointments-tab').addEventListener('click', function(e) {
+            e.preventDefault();
+            showTab('appointments-content');
+            document.getElementById('sidebar').classList.remove('active');
+        });
+        
+        document.getElementById('review-tab').addEventListener('click', function(e) {
+            e.preventDefault();
+            showTab('review-content');
+            document.getElementById('sidebar').classList.remove('active');
+        });
+        
+        document.getElementById('tokens-tab').addEventListener('click', function(e) {
+            e.preventDefault();
+            showTab('tokens-content');
+            document.getElementById('sidebar').classList.remove('active');
+        });
+        
+        document.getElementById('notifications-tab').addEventListener('click', function(e) {
+            e.preventDefault();
+            showTab('notifications-content');
+            document.getElementById('sidebar').classList.remove('active');
+        });
+        
+        function showTab(tabId) {
+            // Hide all tabs
+            document.getElementById('dashboard-content').style.display = 'none';
+            document.getElementById('appointments-content').style.display = 'none';
+            document.getElementById('review-content').style.display = 'none';
+            document.getElementById('tokens-content').style.display = 'none';
+            document.getElementById('notifications-content').style.display = 'none';
+            
+            // Show selected tab
+            document.getElementById(tabId).style.display = 'block';
+            
+            // Update active tab
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Modal Handling
+        const newAppointmentModal = document.getElementById('new-appointment-modal');
+        const modifyAppointmentModal = document.getElementById('modify-appointment-modal');
+        
+        document.getElementById('new-appointment-btn').addEventListener('click', function() {
+            newAppointmentModal.style.display = 'flex';
+            document.getElementById('sidebar').classList.remove('active');
+        });
+        
+        document.getElementById('modify-appointment-btn').addEventListener('click', function() {
+            // In a real app, you would populate this with actual appointment data
+            document.getElementById('modify-appointment-id').value = 'APT-2023-1001';
+            document.getElementById('modify-patient-name').value = 'John Smith';
+            modifyAppointmentModal.style.display = 'flex';
+            document.getElementById('sidebar').classList.remove('active');
+        });
+        
+        document.getElementById('generate-token-btn').addEventListener('click', function() {
+            showTab('tokens-content');
+        });
+        
+        document.getElementById('send-notification-btn').addEventListener('click', function() {
+            showTab('notifications-content');
+        });
+        
+        document.querySelectorAll('.close').forEach(closeBtn => {
+            closeBtn.addEventListener('click', function() {
+                this.closest('.modal').style.display = 'none';
+            });
+        });
+        
+        window.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        });
+        
+        // Generate Token
+        document.getElementById('generate-token-now-btn').addEventListener('click', function() {
+            const patientSelect = document.getElementById('token-patient');
+            if (patientSelect.value === '') {
+                alert('Please select a patient first');
+                return;
+            }
+            
+            // Generate a random token number (in real app, this would come from backend)
+            const tokenNumber = 'TK-' + Math.floor(1000 + Math.random() * 9000);
+            
+            // Display token
+            const tokenDisplay = document.getElementById('token-display');
+            tokenDisplay.querySelector('.token-display').textContent = tokenNumber;
+            
+            // Generate QR code
+            const qrContainer = document.getElementById('token-qrcode');
+            qrContainer.innerHTML = '';
+            new QRCode(qrContainer, {
+                text: tokenNumber,
+                width: 150,
+                height: 150,
+                colorDark: "#2a7f62",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            tokenDisplay.style.display = 'block';
+        });
+        
+        // Send WhatsApp Notification
+        document.getElementById('send-whatsapp-btn').addEventListener('click', function() {
+            const patientSelect = document.getElementById('notification-patient');
+            const message = document.getElementById('notification-message').value;
+            
+            if (patientSelect.value === '') {
+                alert('Please select a patient first');
+                return;
+            }
+            
+            if (message.trim() === '') {
+                alert('Please enter a message');
+                return;
+            }
+            
+            // In a real app, this would send to actual WhatsApp number
+            // This is just a simulation
+            alert('WhatsApp notification would be sent to patient with message:\n\n' + message);
+            
+            // Clear form
+            document.getElementById('notification-message').value = '';
+        });
+        
+        // Form Submissions
+        document.getElementById('new-appointment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Appointment scheduled successfully!');
+            newAppointmentModal.style.display = 'none';
+            this.reset();
+        });
+        
+        document.getElementById('modify-appointment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Appointment updated successfully!');
+            modifyAppointmentModal.style.display = 'none';
+        });
+        
+        // Initialize with dashboard
+        showTab('dashboard-content');
+    </script>
+</body>
+</html>
